@@ -1,3 +1,16 @@
+/* :root {
+  background-image: url("../images/subtle-prism.svg");
+} */
+
+.background-image {
+  background-image: url(./assets/images/subtle-prism.svg);
+  background-size: cover;
+  background-position: top;
+  min-height: 100%;
+  height: 100vh;
+  position: relative;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
