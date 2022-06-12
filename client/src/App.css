@@ -1,0 +1,35 @@
+/* .fullApp {
+  background-image: url("../images/subtle-prism.svg");
+} */
+
+.background-image {
+  background-image: url(./assets/images/subtle-prism.svg);
+  background-size: cover;
+  background-position: top;
+  min-height: 100vh;
+  /* height: 100vh;  */
+  position: relative;
+  background-attachment: fixed;
+}
+
+
+.App {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; 
+  width: 100%; 
+  max-width: 500px;
+  border: 1px solid mediumblue;
+  margin: auto;
+}
+
+
+
+a:hover, a:visited, a:link, a:active
+{
+    text-decoration: none;
+}
+
+

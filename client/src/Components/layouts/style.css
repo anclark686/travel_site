@@ -1,0 +1,25 @@
+#brand {
+    color: #53caf0;
+    text-decoration: none;
+    font-weight: bold;
+  
+  }
+
+.phantom {
+  display: block;
+  padding: 20px;
+  height: 120px;
+  width: 100%;
+}
+
+.footer {
+  background-color: #202429;
+  color: #53caf0;
+  text-align: center;
+  padding: 20px;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 120px;
+  width: 100%;
+}
