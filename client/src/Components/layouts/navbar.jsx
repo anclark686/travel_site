@@ -1,6 +1,9 @@
 import { React, useState } from "react";
 import { Link } from "react-router-dom";
 import { Navbar, Container, Offcanvas, Button, Form, FormControl } from 'react-bootstrap';
+import LoginButton from '../login_reg/login'
+import LogoutButton from '../login_reg/logout'
+import { useAuth0 } from "@auth0/auth0-react";
 import "./style.css";
 
 
@@ -19,8 +22,10 @@ function MenuOffCanvas({ name, ...props }) {
   
     const handleClose = () => setShow(false);
     const toggleShow = () => setShow((s) => !s);
-  
+    const { isAuthenticated } = useAuth0();
     return (
+      
+      (isAuthenticated && (
       <>
         <Button variant="info" onClick={toggleShow} className="me-2">
           {name}
@@ -31,20 +36,41 @@ function MenuOffCanvas({ name, ...props }) {
           </Offcanvas.Header>
           <Offcanvas.Body>
             <div className="loginRegister">
-              <Link to={"/login"} 
-                onClick={toggleShow}
-                style={{paddingRight:"10px"}}>    
-              Login 
-              </Link> 
-              <Link to={"/signup"} 
-                onClick={toggleShow}
-                style={{paddingLeft:"10px"}}>    
-                Sign Up 
-              </Link> 
+              <LogoutButton />
             </div>
+            <Link to={"/account"} onClick={toggleShow}>    
+                <div id="account">Account</div>
+            </Link>
+            <Link to={"/settings"} onClick={toggleShow}>    
+                <div id="settings">Settings</div>
+            </Link>  
             <Link to={"/create"} onClick={toggleShow}>    
                 <div id="create">Create New Post</div>
             </Link> 
+            <Link to={"/search"} onClick={toggleShow}>    
+                <div id="search">Search</div>
+            </Link>
+            <Link to={"/welcome"} onClick={toggleShow}>    
+                <div id="welcome">Home</div>
+            </Link> 
+            
+          </Offcanvas.Body>
+        </Offcanvas>
+      </>)) 
+      || 
+      (!isAuthenticated && (
+      <>
+        <Button variant="info" onClick={toggleShow} className="me-2">
+          {name}
+        </Button>
+        <Offcanvas show={show} onHide={handleClose} {...props}>
+          <Offcanvas.Header closeButton>
+            <Offcanvas.Title>Navigation</Offcanvas.Title>
+          </Offcanvas.Header>
+          <Offcanvas.Body>
+            <div className="loginRegister">
+              <LoginButton /> 
+            </div>
             <Link to={"/search"} onClick={toggleShow}>    
                 <div id="search">Search</div>
             </Link>
@@ -54,7 +80,7 @@ function MenuOffCanvas({ name, ...props }) {
             
           </Offcanvas.Body>
         </Offcanvas>
-      </>
+      </>))
     );
   }
   
