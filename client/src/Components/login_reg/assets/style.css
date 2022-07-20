@@ -1,29 +1,45 @@
-.loginForm {
-    margin-top: 3rem;
-    padding-bottom: 3rem;
-    width: 500px;
+.nav-menu  {
+    text-decoration: none;
+    margin-top: 10px;
+    color: #53caf0;
+    font-size: 20px;
+    font-weight: bold;
+    padding-left: 5px;
+}
+
+.loginRegister {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: nowrap;
-    margin-left: auto;
-    margin-right: auto;
+}
+
+.loginRegister button {
+   font-size: 25px; 
+   margin: 10px auto;
+}
+
+.navigation {
+    color: white;
 }
 
 #loginImage {
     margin: 3rem;
-    width: '100px';
+    width: 150px;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-wrap: nowrap;
     margin-left: auto;
     margin-right: auto;
-    
 }
 
-@media only screen and (max-width: 600px) {
-    .loginForm {
-        width: 75%;
-    }
-  }
+#loginButton button {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2rem;
+    font-size: 25px;
+    padding: 10px 30px;
+}
+
+.logout {
+    margin-top: 20px;
+}
+

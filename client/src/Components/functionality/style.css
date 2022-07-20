@@ -1,0 +1,33 @@
+.search-filters {
+    width: 50%;
+    margin: 20px auto;
+    align-items: right;
+    text-align: left;
+    padding: 20px;
+}
+
+.radio-search {
+    margin: auto;
+    font-size: 20px;
+}
+
+.radio-search input {
+    margin: 5px;
+}
+
+.search-posts {
+    margin:auto;
+}
+
+#search-posts {
+    width: 100%;
+}
+
+@media only screen and (max-width: 600px) {
+    .search-filters {
+        display: block;
+    }
+    #search-posts {
+        position: relative;
+    }
+}
