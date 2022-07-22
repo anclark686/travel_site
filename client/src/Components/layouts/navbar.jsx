@@ -69,14 +69,16 @@ function MenuOffCanvas({ name, ...props }) {
         </Button>
         <Offcanvas className="bg-dark" show={show} onHide={handleClose} {...props}>
           <Offcanvas.Header closeButton>
-            <Offcanvas.Title>Navigation</Offcanvas.Title>
+            <div className="navigation">
+              <Offcanvas.Title>Navigation</Offcanvas.Title>
+            </div>
           </Offcanvas.Header>
           <Offcanvas.Body>
             <div className="loginRegister">
               <LoginButton /> 
             </div>
-            <Link to={"/search"} onClick={toggleShow}>    
-                <div className="nav-menu" id="search">Search</div>
+            <Link to={"/gallery"} onClick={toggleShow}>    
+                <div className="nav-menu" id="gallery">Public Gallery</div>
             </Link>
             <Link to={"/"} onClick={toggleShow}>    
                 <div className="nav-menu" id="home">Home</div>

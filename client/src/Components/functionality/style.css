@@ -23,6 +23,19 @@
     width: 100%;
 }
 
+.pic-upload {
+    margin-top: 3rem;
+    width: 800px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 3rem;
+    position: relative;
+}
+
 @media only screen and (max-width: 600px) {
     .search-filters {
         display: block;
