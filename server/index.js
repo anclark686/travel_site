@@ -2,6 +2,7 @@ import express from "express";
 import db from "./config/database.js";
 import cors from "cors";
 import Post from "./models/postModel.js";
+import postRoutes from "./routes/postRoutes.js";
 
 const app = express();
 
@@ -27,12 +28,6 @@ app.get('/', (req, res) => {
     res.send('Here be a backend')
 })
 
-app.get('/create', (req, res) => {
-    res.send("hello")
-})
-
-app.post('/create', (req, res) => {
-    console.log(req.body.file)
-})
+app.use('/posts', postRoutes)
 
 app.listen(5000, () => console.log('Server running on port 5000'))

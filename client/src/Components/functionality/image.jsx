@@ -9,16 +9,20 @@ const UploadAndDisplayImage = () => {
     const pic = event.target.files[0]
     console.log(pic);
     setSelectedImage(pic);
+
     await Axios.post("http://localhost:5000/create", {
-    file: pic.name
+    file: pic
     })
   }
+
+  
 
   return (
     <div className="pic-upload">
       <Card body className="col d-flex justify-content-center" >
         {selectedImage && (
           <div>
+          <h4>Preview</h4>
           <img alt="not found" width={"750px"} src={URL.createObjectURL(selectedImage)} />
           <br />
           <br />
@@ -39,6 +43,8 @@ const UploadAndDisplayImage = () => {
             accept="image/png, image/jpeg"
             onChange={handleClick}
           />
+          <br />
+          <Button variant="info">Submit</Button>
         </Form.Group>
         <br />
         <Form.Group as={Col} controlId="formGridTitle" className="pic-title">
