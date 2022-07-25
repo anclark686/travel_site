@@ -1,17 +1,59 @@
 import React, { useState } from "react";
 import Axios from "axios"
 import { Form, Col, Button, Card } from 'react-bootstrap';
+import { useAuth0 } from "@auth0/auth0-react";
+import { useNavigate } from "react-router-dom";
+
 
 const UploadAndDisplayImage = () => {
   const [selectedImage, setSelectedImage] = useState(null);
+  const [fileName, setFileName] = useState("");
+  const [title, setTitle] = useState("");
+  const [location, setLocation] = useState("");
+  const [description, setDescription] = useState("");
+
+  const { user } = useAuth0()
+  const userName = user.name
+
+  const navigate = useNavigate();
+
+  const saveFile = (e) => {
+    setSelectedImage(e.target.files[0]);
+    setFileName(e.target.files[0].name);
+  }
 
   const handleClick = async (event) => {
-    const pic = event.target.files[0]
-    console.log(pic);
-    setSelectedImage(pic);
-    await Axios.post("http://localhost:5000/create", {
-    file: pic.name
-    })
+    const formData = new FormData();
+
+    formData.append("userName", userName)
+    formData.append("file", selectedImage)
+    formData.append("fileName", fileName)
+    formData.append("title", title)
+    formData.append("location", location)
+    formData.append("description", description)
+
+    console.log(
+      `userName: ${userName},
+      file: ${selectedImage},
+      fileName: ${fileName},
+      title: ${title},
+      location: ${location},
+      description: ${description}
+      `
+    )
+
+    try {
+      const res = await Axios.post(
+        "http://localhost:5000/upload",
+        formData
+      )
+      console.log(res.data)
+      if (res.data === "File has been uploaded.") {
+        navigate("/success")
+      }
+    } catch (ex) {
+      console.log(ex)
+    }
   }
 
   return (
@@ -37,21 +79,41 @@ const UploadAndDisplayImage = () => {
             type="file"
             name="myImage"
             accept="image/png, image/jpeg"
-            onChange={handleClick}
+            onChange={saveFile}
           />
         </Form.Group>
         <br />
         <Form.Group as={Col} controlId="formGridTitle" className="pic-title">
-            <Form.Label for="pic-title">Title</Form.Label>
-            <Form.Control type="text" placeholder="Title" name="pic-title"/>
+            <Form.Label>Title</Form.Label>
+            <Form.Control 
+              type="text" 
+              placeholder="Title" 
+              name="pic-title"
+              onChange={(e) => setTitle(e.target.value)}
+              />
+        </Form.Group>
+
+        <Form.Group as={Col} controlId="formGridLocation" className="pic-title">
+            <Form.Label>Location</Form.Label>
+            <Form.Control 
+              type="text" 
+              placeholder="City, State, Country..." 
+              name="pic-location"
+              onChange={(e) => setLocation(e.target.value)}
+              />
         </Form.Group>
 
         <Form.Group as={Col} controlId="formGridContent" className="pic-content">
-            <Form.Label for="pic-content">Content</Form.Label>
-            <Form.Control as="textarea" rows={5} name="pic-content"/>
+            <Form.Label>Description</Form.Label>
+            <Form.Control 
+              as="textarea" 
+              rows={5} 
+              name="pic-content"
+              onChange={(e) => setDescription(e.target.value)}
+              />
         </Form.Group>
         <br />
-        <Button  variant="info" type="submit">
+        <Button  variant="info" type="submit" onClick={handleClick}>
           Submit
         </Button>
       </Card>
