@@ -13,7 +13,7 @@ const UploadAndDisplayImage = () => {
   const [description, setDescription] = useState("");
 
   const { user } = useAuth0()
-  const userName = user.name
+  const username = user.name
 
   const navigate = useNavigate();
 
@@ -25,7 +25,7 @@ const UploadAndDisplayImage = () => {
   const handleClick = async (event) => {
     const formData = new FormData();
 
-    formData.append("userName", userName)
+    formData.append("username", username)
     formData.append("file", selectedImage)
     formData.append("fileName", fileName)
     formData.append("title", title)
@@ -33,7 +33,7 @@ const UploadAndDisplayImage = () => {
     formData.append("description", description)
 
     console.log(
-      `userName: ${userName},
+      `username: ${username},
       file: ${selectedImage},
       fileName: ${fileName},
       title: ${title},

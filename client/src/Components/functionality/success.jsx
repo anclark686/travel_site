@@ -7,12 +7,13 @@ export const Success = () => {
             <h4>Your image has been uploaded</h4>
             <button className="btn btn-info choices">
                 <Link to={"/details"}>    
-                    View your Post
+                    View Post
                 </Link> 
             </button>
+            <br />
             <button className="btn btn-info choices">
                 <Link to={"/create"}>    
-                    Create a new Post
+                    Create Post
                 </Link> 
             </button>
             <button className="btn btn-info choices">

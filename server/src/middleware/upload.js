@@ -1,5 +1,6 @@
 const multer = require("multer");
 const imageFilter = (req, file, cb) => {
+  
   if (file.mimetype.startsWith("image")) {
     cb(null, true);
   } else {
@@ -11,7 +12,8 @@ var storage = multer.diskStorage({
     cb(null, __basedir + "/resources/uploads/");
   },
   filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-bezkoder-${file.originalname}`);
+    console.log(req.body)
+    cb(null, `${req.body.username}-${file.originalname}`);
   },
 });
 var uploadFile = multer({ storage: storage, fileFilter: imageFilter });

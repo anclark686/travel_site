@@ -36,6 +36,15 @@
     position: relative;
 }
 
+.success {
+    text-align: center;
+}
+
+.image {
+    display: inline-flex;
+    padding: 20px;
+}
+
 @media only screen and (max-width: 600px) {
     .search-filters {
         display: block;
