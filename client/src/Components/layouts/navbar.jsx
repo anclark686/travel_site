@@ -1,9 +1,6 @@
 import { React, useState } from "react";
 import { Link } from "react-router-dom";
 import { Navbar, Container, Offcanvas, Button, Form, FormControl } from 'react-bootstrap';
-import LoginButton from '../login_reg/login'
-import LogoutButton from '../login_reg/logout'
-import { useAuth0 } from "@auth0/auth0-react";
 import "./assets/style.css";
 
 
@@ -22,10 +19,9 @@ function MenuOffCanvas({ name, ...props }) {
   
     const handleClose = () => setShow(false);
     const toggleShow = () => setShow((s) => !s);
-    const { isAuthenticated } = useAuth0();
+
     return (
       
-      (isAuthenticated && (
       <div>
         <Button variant="info" onClick={toggleShow} className="me-2">
           {name}
@@ -56,13 +52,12 @@ function MenuOffCanvas({ name, ...props }) {
                 <div className="nav-menu" id="welcome">Home</div>
             </Link> 
             <div className="logout">
-              <LogoutButton />
+
             </div>
           </Offcanvas.Body>
         </Offcanvas>
-      </div>)) 
+      </div>) 
       || 
-      (!isAuthenticated && (
       <div>
         <Button variant="info" onClick={toggleShow} className="me-2">
           {name}
@@ -75,7 +70,7 @@ function MenuOffCanvas({ name, ...props }) {
           </Offcanvas.Header>
           <Offcanvas.Body>
             <div className="loginRegister">
-              <LoginButton /> 
+
             </div>
             <Link to={"/gallery"} onClick={toggleShow}>    
                 <div className="nav-menu" id="gallery">Public Gallery</div>
@@ -85,8 +80,7 @@ function MenuOffCanvas({ name, ...props }) {
             </Link> 
           </Offcanvas.Body>
         </Offcanvas>
-      </div>))
-    );
+      </div>
   }
   
   function Menu() {

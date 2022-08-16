@@ -1,13 +1,10 @@
 import React from "react";
-import { useAuth0 } from "@auth0/auth0-react";
-import { NeedToLogin } from "../login_reg/needtologin";
 
   
 export const Posts = () => {
-  const { isAuthenticated } = useAuth0();
+
   
   return (
-    (isAuthenticated && (
       <div className="posts">
         <div className="header">
           <h1 id="posts">Posts</h1>
@@ -22,12 +19,7 @@ export const Posts = () => {
             <option value="date-d">Date Descending</option>
           </select>
         </div>
-      </div>
-      
-  )) ||
-    (!isAuthenticated && (
-      <NeedToLogin />
-    ))
-  );
+      </div>      
+  )
 };
   

@@ -1,20 +1,11 @@
 import React, { useState } from "react";
-import Axios from "axios"
+
   
 export const Gallery = () => {
   const [image, setImage] = useState([])
 
   const getImages = async (req, res) => {
     
-    try {
-      const response = await Axios.get(
-        "http://localhost:5000/gallery",
-      )
-      setImage(response.data)
-      console.log(image)
-    } catch (ex) {
-      console.log(ex)
-    }
   }
   return (
     <div className="header">
