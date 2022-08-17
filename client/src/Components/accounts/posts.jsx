@@ -1,16 +1,48 @@
-import React from "react";
+import React, { useState, useEffect } from 'react'
+import { auth, db } from '../../firebase'
+import { NeedToLogin } from "../login_reg/needtologin";
+import Post from "../functionality/post"
+import { Link } from "react-router-dom";
+
 
   
 export const Posts = () => {
+  const [user, setUser] = useState(null)
+  const [posts, setPosts] = useState([])
 
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((authUser) => {
+      if (authUser) setUser(authUser)
+      else setUser(null)
+      return () => unsubscribe()
+    })
+
+    getResults()
+  }, [user])
   
+
+  const getResults = async () => {
+    db.collection('posts')
+    .where("username", "==", user.displayName)
+    .onSnapshot(snapshot => {
+      setPosts(snapshot.docs.map(doc => ({
+        id: doc.id,
+        post: doc.data()
+      })))
+    })
+  console.log(posts) 
+  }
+
+
+
   return (
-      <div className="posts">
+    <>
+      {user ? <div className="posts">
         <div className="header">
           <h1 id="posts">Posts</h1>
         </div>
         <div className="sort-post-dropdown">
-          <label for="sort-by">Sort by:</label>
+          <label htmlFor="sort-by">Sort by:</label>
 
           <select name="sort-by" id="sort-by-dropdown">
             <option value="name-a">Name Ascending</option>
@@ -18,8 +50,29 @@ export const Posts = () => {
             <option value="date-a">Date Ascending</option>
             <option value="date-d">Date Descending</option>
           </select>
+
+          {posts.map(({id, post}) => (
+            <>
+            <Link className="gallery_links" to="/details" state={{post: post, postId: id}}>
+              <Post 
+                key={id} 
+                postId={id} 
+                user={user} 
+                username={post.username} 
+                title={post.title} 
+                location={post.location} 
+                caption={post.caption} 
+                imageUrl={post.imageUrl}
+              />
+            </Link>
+
+            </>
+          ))}
+
+
         </div>
-      </div>      
+      </div> : <NeedToLogin />} 
+    </>    
   )
 };
   

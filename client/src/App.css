@@ -43,4 +43,9 @@ a:hover, a:visited, a:link, a:active
 
 .header {
   text-align: center;
+  margin: 20px;
+}
+
+.btn a {
+  color: #55D2F1;
 }

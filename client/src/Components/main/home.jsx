@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from 'react'
+import { auth, db, storage } from '../../firebase'
 import { Link } from "react-router-dom";
 
 const chicago = require("./assets/chicago.jpg")
@@ -7,6 +8,15 @@ const beach = require("./assets/beach1.jpg")
 const waterfall = require("./assets/waterfall1.jpg")
   
 export const Home = () => {
+  const [user, setUser] = useState(null)
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((authUser) => {
+      if (authUser) setUser(authUser)
+      else setUser(null)
+      return () => unsubscribe()
+    })
+  }, [user])
   return (
     <div className="home">
       <div className="home-photos">
@@ -16,11 +26,29 @@ export const Home = () => {
       <div className="header">
         <h1>Reyaly Travel</h1>
         <h5>Share your travel photos</h5>
-        <button className="btn btn-info choices">
-          <Link to={"/gallery"}>    
-            Gallery
-          </Link> 
-        </button>
+
+        { user ? 
+          <div className="home_buttons">
+            <button className="btn btn-dark choices">
+              <Link to={"/gallery"}>    
+                Gallery
+              </Link> 
+            </button>
+          </div>
+        :
+          <div className="home_buttons">
+            <button className="btn btn-dark choices">
+              <Link to={"/gallery"}>    
+                Gallery
+              </Link> 
+            </button>
+            <button className="btn btn-dark choices">
+              <Link to={"/login"}>    
+                Login
+              </Link> 
+            </button>
+          </div>}
+
       </div>
 
       <div className="home-photos">

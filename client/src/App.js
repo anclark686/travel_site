@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Welcome, Home, About, Contact } from "./Components/main/index"
 import { Settings, Account, Posts } from "./Components/accounts/index"
 import { Search, Details, Create, Gallery, Success } from "./Components/functionality/index"
+import { Login, Register } from "./Components/login_reg/index"
 import Layout from "./Components/layouts/layout";
 
  
@@ -16,6 +17,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
+          <Route path="login" element={<Login />} />
+          <Route path="register" element={<Register />} />
           <Route path="welcome" element={<Welcome />} />
           <Route path="about" element={<About />} />
           <Route path="contact" element={<Contact />} />

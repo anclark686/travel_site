@@ -1,7 +1,8 @@
-import { React, useState } from "react";
-import { Link } from "react-router-dom";
+import { React, useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Navbar, Container, Offcanvas, Button, Form, FormControl } from 'react-bootstrap';
 import "./assets/style.css";
+import { auth } from '../../firebase'
 
 
 const logo = require("./assets/AC_ICON.png")
@@ -20,9 +21,39 @@ function MenuOffCanvas({ name, ...props }) {
     const handleClose = () => setShow(false);
     const toggleShow = () => setShow((s) => !s);
 
+    const navigate = useNavigate();
+
+    const [user, setUser] = useState(null)
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((authUser) => {
+      if (authUser) {
+        // user has logged in...
+        // console.log(authUser)
+        setUser(authUser)
+        console.log(user)
+
+      } else {
+        // user has logged out...
+        console.log(user)
+        setUser(null)
+      }
+      return () => {
+        // perform some cleanup actions 
+        unsubscribe()
+      }
+    })
+  }, [user])
+
+    const Logout = () => {
+      auth.signOut()
+      navigate("/")
+      toggleShow()
+    }
+
     return (
-      
-      <div>
+      <>
+      { user ? (<div>
         <Button variant="info" onClick={toggleShow} className="me-2">
           {name}
         </Button>
@@ -33,6 +64,7 @@ function MenuOffCanvas({ name, ...props }) {
             </div>
           </Offcanvas.Header>
           <Offcanvas.Body>
+
             <Link to={"/create"} onClick={toggleShow}>    
                 <div className="nav-menu" id="create">Create New Post</div>
             </Link> 
@@ -52,13 +84,13 @@ function MenuOffCanvas({ name, ...props }) {
                 <div className="nav-menu" id="welcome">Home</div>
             </Link> 
             <div className="logout">
-
+              <Button variant="info" onClick={Logout}>Logout</Button>
             </div>
           </Offcanvas.Body>
         </Offcanvas>
-      </div>) 
-      || 
-      <div>
+      </div>)
+      : 
+      (<div>
         <Button variant="info" onClick={toggleShow} className="me-2">
           {name}
         </Button>
@@ -70,6 +102,12 @@ function MenuOffCanvas({ name, ...props }) {
           </Offcanvas.Header>
           <Offcanvas.Body>
             <div className="loginRegister">
+              <Link to={"/login"} onClick={toggleShow}>    
+                  <div className="nav-menu" id="login">Login</div>
+              </Link> <p>--</p>
+              <Link to={"/register"} onClick={toggleShow}>    
+                  <div className="nav-menu" id="register">Register</div>
+              </Link> 
 
             </div>
             <Link to={"/gallery"} onClick={toggleShow}>    
@@ -80,7 +118,9 @@ function MenuOffCanvas({ name, ...props }) {
             </Link> 
           </Offcanvas.Body>
         </Offcanvas>
-      </div>
+      </div>)}
+      </>
+    )
   }
   
   function Menu() {
