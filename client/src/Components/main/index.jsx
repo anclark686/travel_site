@@ -1,4 +1,4 @@
-import "./style.css";
+import "./assets/style.css";
 
 
 export { Welcome } from "./welcome";

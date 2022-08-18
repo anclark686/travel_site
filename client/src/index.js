@@ -5,12 +5,11 @@ import App from './App';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container } from 'react-bootstrap';
 
-
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <div id="bg">
     <Container className="p-0 " fluid={true}>
-      <App />
+        <App />
     </Container>
   </div>
 );

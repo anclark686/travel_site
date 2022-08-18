@@ -1,7 +1,8 @@
-import { React, useState } from "react";
-import { Link } from "react-router-dom";
+import { React, useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Navbar, Container, Offcanvas, Button, Form, FormControl } from 'react-bootstrap';
-import "./style.css";
+import "./assets/style.css";
+import { auth } from '../../firebase'
 
 
 const logo = require("./assets/AC_ICON.png")
@@ -19,43 +20,107 @@ function MenuOffCanvas({ name, ...props }) {
   
     const handleClose = () => setShow(false);
     const toggleShow = () => setShow((s) => !s);
-  
+
+    const navigate = useNavigate();
+
+    const [user, setUser] = useState(null)
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((authUser) => {
+      if (authUser) {
+        // user has logged in...
+        // console.log(authUser)
+        setUser(authUser)
+        console.log(user)
+
+      } else {
+        // user has logged out...
+        console.log(user)
+        setUser(null)
+      }
+      return () => {
+        // perform some cleanup actions 
+        unsubscribe()
+      }
+    })
+  }, [user])
+
+    const Logout = () => {
+      auth.signOut()
+      navigate("/")
+      toggleShow()
+    }
+
     return (
       <>
+      { user ? (<div>
         <Button variant="info" onClick={toggleShow} className="me-2">
           {name}
         </Button>
-        <Offcanvas show={show} onHide={handleClose} {...props}>
+        <Offcanvas className="bg-dark" show={show} onHide={handleClose} {...props}>
           <Offcanvas.Header closeButton>
-            <Offcanvas.Title>Navigation</Offcanvas.Title>
+            <div className="navigation">
+              <Offcanvas.Title>Navigation</Offcanvas.Title>
+            </div>
+          </Offcanvas.Header>
+          <Offcanvas.Body>
+
+            <Link to={"/create"} onClick={toggleShow}>    
+                <div className="nav-menu" id="create">Create New Post</div>
+            </Link> 
+            <Link to={"/posts"} onClick={toggleShow}>    
+                <div className="nav-menu" id="posts">View Your Posts</div>
+            </Link>  
+            <Link to={"/gallery"} onClick={toggleShow}>    
+                <div className="nav-menu" id="gallery">Public Gallery</div>
+            </Link>
+            <Link to={"/search"} onClick={toggleShow}>    
+                <div className="nav-menu" id="search">Search</div>
+            </Link>
+            {/* <Link to={"/account"} onClick={toggleShow}>    
+                <div className="nav-menu" id="account">Account</div>
+            </Link>   */}
+            <Link to={"/welcome"} onClick={toggleShow}>    
+                <div className="nav-menu" id="welcome">Home</div>
+            </Link> 
+            <div className="logout">
+              <Button className="logout" variant="info" onClick={Logout}>Logout</Button>
+            </div>
+          </Offcanvas.Body>
+        </Offcanvas>
+      </div>)
+      : 
+      (<div>
+        <Button variant="info" onClick={toggleShow} className="me-2">
+          {name}
+        </Button>
+        <Offcanvas className="bg-dark" show={show} onHide={handleClose} {...props}>
+          <Offcanvas.Header closeButton>
+            <div className="navigation">
+              <Offcanvas.Title>Navigation</Offcanvas.Title>
+            </div>
           </Offcanvas.Header>
           <Offcanvas.Body>
             <div className="loginRegister">
-              <Link to={"/login"} 
-                onClick={toggleShow}
-                style={{paddingRight:"10px"}}>    
-              Login 
+              <Link to={"/login"} onClick={toggleShow}>    
+                  <div className="nav-menu" id="login">Login</div>
+              </Link> <p>--</p>
+              <Link to={"/register"} onClick={toggleShow}>    
+                  <div className="nav-menu" id="register">Register</div>
               </Link> 
-              <Link to={"/signup"} 
-                onClick={toggleShow}
-                style={{paddingLeft:"10px"}}>    
-                Sign Up 
-              </Link> 
+
             </div>
-            <Link to={"/create"} onClick={toggleShow}>    
-                <div id="create">Create New Post</div>
-            </Link> 
-            <Link to={"/search"} onClick={toggleShow}>    
-                <div id="search">Search</div>
+            <Link to={"/gallery"} onClick={toggleShow}>    
+                <div className="nav-menu" id="gallery">Public Gallery</div>
             </Link>
             <Link to={"/"} onClick={toggleShow}>    
-                <div id="home">Home</div>
+                <div className="nav-menu" id="home">Home</div>
             </Link> 
-            
           </Offcanvas.Body>
         </Offcanvas>
+      </div>)}
       </>
-    );
+    )
   }
   
   function Menu() {
@@ -86,7 +151,7 @@ function Nav() {
                 </Link>    
                 </Navbar.Brand>
 
-                <Form className="d-flex">
+                {/* <Form className="d-flex">
                     <FormControl
                     type="search"
                     placeholder="Search"
@@ -94,7 +159,7 @@ function Nav() {
                     aria-label="Search"
                     />
                     <Button variant="outline-info">Search</Button>
-                </Form>
+                </Form> */}
 
                 <Menu />
 

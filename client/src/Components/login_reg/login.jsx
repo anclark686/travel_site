@@ -1,7 +1,7 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import { Form, Button, Card } from "react-bootstrap"
 import { Link, useNavigate } from "react-router-dom";
-import Axios from "axios";
+import { auth } from '../../firebase'
 
 
 // <a href="https://www.flaticon.com/free-icons/login" title="login icons">Login icons created by Freepik - Flaticon</a>
@@ -12,48 +12,45 @@ const loginImage = require("./assets/login.png")
 export const Login = () => {
   const [validated, setValidated] = useState(false);
 
-  const [username, setUsername] = useState("")
+  const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   
-  const [userMatch, setUserMatch] = useState(true)
-  const [passMatch, setPassMatch] = useState(true)
-
   const [loggedInErr, setLoggedInErr] = useState(false)
+
+  const [user, setUser] = useState(null)
 
   const navigate = useNavigate();
 
   const loginMethod = async (e) => {
+    auth
+    .signInWithEmailAndPassword(email, password)
+    .catch((err) => {
+      console.log(err.message)
+      setLoggedInErr(err.message)
+    })
 
-    await Axios.post("http://localhost:5000/users/login", {
-      username: username,
-      password: password
-    }).then((response) => {
-      if (response.data === "Not Found") {
-        setUserMatch(false)
-      } else if (response.data === "password invalid") {
-        setPassMatch(false)
-        setUserMatch(true)
-      } else if (response.data === "password valid") {
-        navigate("/welcome")
-      } else {setLoggedInErr(true)}
-    });
-    // await Axios.get("http://localhost:5000/users/login").then((response) => {
-    //   if (response.username === username) {
-    //     if (response === password) {
-    //       navigate("/home")
-    //     } else {
-    //       setPassMatch(false)
-    //     }
-    //   } else {
-    //     setPassMatch(false)
-    //   }
-    
-      
-    // })
   }
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((authUser) => {
+      if (authUser) {
+        // user has logged in...
+        console.log(authUser)
+        setUser(authUser)
+        console.log("success!")
+        navigate("/welcome")
+      } else {
+        // user has logged out...
+        setUser(null)
+      }
+      return () => {
+        // perform some cleanup actions 
+        unsubscribe()
+      }
+    })
+  }, [user])
 
+  const handleSubmit = (e) => {
     const form = e.currentTarget;
 
     if (form.checkValidity() === false) {
@@ -63,7 +60,7 @@ export const Login = () => {
     } 
     else {
         e.preventDefault();
-        console.log(`${username}, ${password}`)
+        console.log(`${email}, ${password}`)
         loginMethod()
         setValidated(false);
     }
@@ -76,14 +73,17 @@ export const Login = () => {
       <div className="loginForm">
         <Card body className="col d-flex justify-content-center">
           <Form noValidate validated={validated} onSubmit={handleSubmit}>
-          { loggedInErr ?  <p>Unable to Log in, please try again later.</p> : null }
+          { loggedInErr === "Firebase: There is no user record corresponding to this identifier. The user may have been deleted. (auth/user-not-found)." 
+          ?  <p>Unable to locate user, please <Link to={"/register"}>Register</Link></p> : null }
+          { loggedInErr === "Firebase: The email address is badly formatted. (auth/invalid-email)." ?  
+          <p>Invalid Email Address</p> : null }
             <Form.Group className="mb-3" controlId="formBasicEmail">
-              <Form.Label>Username</Form.Label>
+              <Form.Label>Email Address</Form.Label>
               <Form.Control 
               type="text" 
-              placeholder="Enter username" 
-              onChange={ (e) => {setUsername(e.target.value)} }/>
-              { userMatch ? null : <p>Incorrect Username.</p>  }
+              placeholder="Enter email address" 
+              onChange={ (e) => {setEmail(e.target.value)} }/>
+
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicPassword">
@@ -92,11 +92,8 @@ export const Login = () => {
               type="password" 
               placeholder="Password" 
               onChange={ (e) => {setPassword(e.target.value)} }/>
-              { passMatch ? null : <p>Incorrect Password.</p> }
             </Form.Group>
-            <Form.Group className="mb-3" controlId="formBasicCheckbox">
-              <Form.Check type="checkbox" label="Remember me" />
-            </Form.Group>
+            
             <Button variant="info" type="submit">
               Submit
             </Button>
@@ -104,7 +101,7 @@ export const Login = () => {
             <br />  
             <Form.Group className="mb-3">
               <Form.Label>Need to create an account? </Form.Label>
-              <Link to={"/signUp"}> Sign Up</Link>
+              <Link to={"/register"}> Register</Link>
             </Form.Group>
           </Form>
         </Card>
@@ -112,4 +109,3 @@ export const Login = () => {
     </div>
   );
 };
-

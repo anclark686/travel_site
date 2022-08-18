@@ -1,17 +1,12 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import { Form, Button, Card, Col, Row } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import Axios from "axios";
+import { auth } from '../../firebase'
+
 
 const loginImage = require("./assets/login.png")
 
-function sleeper(ms) {
-  return function(x) {
-    return new Promise(resolve => setTimeout(() => resolve(x), ms));
-  };
-}
-
-export const SignUp =  () => {
+export const Register =  () => {
   const [validated, setValidated] = useState(false);
 
   const navigate = useNavigate();
@@ -28,27 +23,41 @@ export const SignUp =  () => {
   const [passwordValid, setPasswordValid] = useState("")
   
   const [somethingWrong, setSomethingWrong] = useState("")
-  let areYouReady = false
 
-  const createUser = async (e) => {
+  const [user, setUser] = useState(null)
+
+  const createUser =  (e) => {
     console.log(`2: ${firstName}, ${lastName}, ${email}, ${username}, ${password}, ${validated}`)
-       
-    if (validated===false) {
-      await Axios.post("http://localhost:5000/users/create", {
-      firstName : firstName,
-      lastName : lastName,
-      email : email,
-      username : username,
-      password : password,
-    }).then((response) => {
-      (response.data === "Values Inserted") ? areYouReady = true : areYouReady = false
-      setSomethingWrong(response.data)
-      if (areYouReady) {navigate("/welcome") }
+    auth
+    .createUserWithEmailAndPassword(email, password)
+    .then((authUser) => {
+      return authUser.user.updateProfile({
+        displayName: username,
+        firstName: firstName,
+        lastName: lastName
+      })
     })
-    
-    
+    .catch((err) => alert(err.message))
+    }
 
-  }}
+    useEffect(() => {
+      const unsubscribe = auth.onAuthStateChanged((authUser) => {
+        if (authUser) {
+          // user has logged in...
+          console.log(authUser)
+          setUser(authUser)
+          console.log("success!")
+          navigate("/welcome")
+        } else {
+          // user has logged out...
+          setUser(null)
+        }
+        return () => {
+          // perform some cleanup actions 
+          unsubscribe()
+        }
+      })
+    }, [user])
 
   const checkValues = (e) => {
     if (firstName === "") { 
@@ -155,9 +164,7 @@ export const SignUp =  () => {
               onChange={ (e) => {setPassword(e.target.value.trim())} }/>
               { (passwordValid==="blankPassword") ? <p>Password cannot be blank.</p> : null }
             </Form.Group>
-            <Form.Group className="mb-3" controlId="signInCheck">
-              <Form.Check type="checkbox" label="Remember Me" />
-            </Form.Group>
+
             <Button variant="info" type="submit">
               Submit
             </Button>
@@ -178,4 +185,3 @@ export const SignUp =  () => {
 
   );
 };
-

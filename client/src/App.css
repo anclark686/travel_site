@@ -32,4 +32,20 @@ a:hover, a:visited, a:link, a:active
     text-decoration: none;
 }
 
+.loading-button {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
 
+.header {
+  text-align: center;
+  margin: 20px;
+}
+
+.btn a {
+  color: #55D2F1;
+}

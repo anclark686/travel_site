@@ -1,0 +1,83 @@
+.contactCard {
+    margin-top: 3rem;
+    width: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 3rem;
+    position: relative;
+}
+
+#contactImage {
+    margin: 3rem;
+    width: '100px';
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.home {
+    text-align: center;
+}
+
+.home-photos img {
+    width: 48%;
+    margin: 20px 5px;
+    border-radius: 5px;
+}
+
+.welcome {
+    display: flex;
+}
+
+.welcome-photos img {
+    width: 25rem;
+    margin: 0px 10px;
+    border-radius: 5px;
+    display: flex;
+}
+
+.welcome-options {
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 25%;
+}
+
+.choices {
+    margin: 20px;
+    width: 220px;
+}
+
+.choices a {
+    color: #55D2F1;
+    padding: 20px;
+    font-size: 25px;
+}
+
+@media only screen and (max-width: 600px) {
+    .contactCard {
+        width: 75%;
+    }
+
+    .home-photos {
+        width: 95%;
+        margin-right: auto;
+        margin-left: auto;
+    }
+    .welcome {
+        display: flex;
+    }
+    .welcome-photos img {
+        width: 220px;
+        display: block;
+    }
+  }
