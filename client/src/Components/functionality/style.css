@@ -1,13 +1,14 @@
 .search-filters {
-    width: 50%;
+    width: 60%;
     margin: 20px auto;
     align-items: right;
     text-align: left;
     padding: 20px;
+    display: flex;
 }
 
 .radio-search {
-    margin: auto;
+    margin-right: 20px;
     font-size: 20px;
 }
 
@@ -65,12 +66,45 @@
 }
 
 .create_card {
-    width: 75%;
-    margin: 10px auto;
+    width: 50%;
+    margin: 20px auto;
     padding: 20px;
     align-items: center;
 }
 
+.imageUpload_input {
+    width: 50%;
+    margin-bottom: 20px;
+}
+
+.imageUpload_file {
+    width: 50%;
+    justify-content: center;
+}
+
+progress {
+    border: none;
+    width: 300px;
+    height: 20px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    color: lightblue;
+}
+  
+  
+progress::-moz-progress-bar {
+    background: lightcolor;
+}
+
+progress::-webkit-progress-value {
+    background: #55D2F1;
+    border-radius: 20px;
+}
+
+progress::-webkit-progress-bar {
+    background: #EBEBEB;
+    border-radius: 20px;
+}
 
 .details_details {
     text-align: center;
@@ -90,6 +124,21 @@
 .post_comments {
     text-align: left;
     margin: 20px;
+}
+
+.dropdown-toggle {
+    border-radius:50px;
+}
+
+
+.input-group>:not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback) {
+    border-top-left-radius: 3px !important;
+    border-bottom-left-radius: 3px!important;
+}
+
+.search_button {
+    text-align: center;
+    margin-bottom: 30px;
 }
 
 @media only screen and (max-width: 600px) {

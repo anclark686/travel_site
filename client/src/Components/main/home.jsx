@@ -29,11 +29,18 @@ export const Home = () => {
 
         { user ? 
           <div className="home_buttons">
-            <button className="btn btn-dark choices">
-              <Link to={"/gallery"}>    
-                Gallery
-              </Link> 
-            </button>
+            <div className="home_buttons">
+              <button className="btn btn-dark choices">
+                <Link to={"/gallery"}>    
+                  Gallery
+                </Link> 
+              </button>
+              <button className="btn btn-dark choices">
+                <Link to={"/welcome"}>    
+                  Homepage
+                </Link> 
+              </button>
+            </div>
           </div>
         :
           <div className="home_buttons">

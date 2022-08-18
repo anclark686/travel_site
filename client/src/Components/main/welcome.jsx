@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Link } from "react-router-dom";
 import { auth, db } from '../../firebase'
 import { NeedToLogin } from "../login_reg/needtologin";
+import { Card } from "react-bootstrap"
 
 const charlotte = require("./assets/charlotte.JPG")
 const gotg = require("./assets/gotg.jpg")
@@ -29,6 +30,7 @@ export const Welcome = () => {
         <img id="beach" src={beach} alt="beach"/>
         <img id="toronto" src={toronto} alt="toronto"/>
       </div>
+      
       <div className="welcome-options">
         <h1>Welcome {user.displayName[0].toUpperCase()+ user.displayName.substring(1)}!</h1>
         <button className="btn btn-dark choices">

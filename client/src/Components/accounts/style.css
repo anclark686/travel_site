@@ -6,3 +6,16 @@
     border-radius: 100%;
 }
 
+.posts {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.sort-post-dropdown {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#sort-by-dropdown {
+    margin: 20px;
+}

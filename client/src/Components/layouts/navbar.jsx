@@ -77,14 +77,14 @@ function MenuOffCanvas({ name, ...props }) {
             <Link to={"/search"} onClick={toggleShow}>    
                 <div className="nav-menu" id="search">Search</div>
             </Link>
-            <Link to={"/account"} onClick={toggleShow}>    
+            {/* <Link to={"/account"} onClick={toggleShow}>    
                 <div className="nav-menu" id="account">Account</div>
-            </Link>  
+            </Link>   */}
             <Link to={"/welcome"} onClick={toggleShow}>    
                 <div className="nav-menu" id="welcome">Home</div>
             </Link> 
             <div className="logout">
-              <Button variant="info" onClick={Logout}>Logout</Button>
+              <Button className="logout" variant="info" onClick={Logout}>Logout</Button>
             </div>
           </Offcanvas.Body>
         </Offcanvas>
@@ -151,7 +151,7 @@ function Nav() {
                 </Link>    
                 </Navbar.Brand>
 
-                <Form className="d-flex">
+                {/* <Form className="d-flex">
                     <FormControl
                     type="search"
                     placeholder="Search"
@@ -159,7 +159,7 @@ function Nav() {
                     aria-label="Search"
                     />
                     <Button variant="outline-info">Search</Button>
-                </Form>
+                </Form> */}
 
                 <Menu />
 
