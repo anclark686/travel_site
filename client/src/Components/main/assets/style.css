@@ -63,6 +63,12 @@
     font-size: 25px;
 }
 
+.about_body {
+    width: 50%;
+    margin: 20px auto;
+    text-align: center;
+}
+
 @media only screen and (max-width: 600px) {
     .contactCard {
         width: 75%;
