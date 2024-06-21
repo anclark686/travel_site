@@ -1,57 +1,67 @@
-.nav-menu  {
-    text-decoration: none;
-    margin-top: 10px;
-    color: #53caf0;
-    font-size: 20px;
-    font-weight: bold;
-    padding-left: 5px;
+.nav-menu {
+  text-decoration: none;
+  margin-top: 10px;
+  color: #53caf0;
+  font-size: 20px;
+  font-weight: bold;
+  padding-left: 5px;
 }
 
 .loginRegister {
-    display: flex;
+  display: flex;
 }
 
 .navigation {
-    color: white;
+  color: white;
 }
 
 #loginImage {
-    margin: 3rem;
-    width: 150px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: nowrap;
-    margin-left: auto;
-    margin-right: auto;
+  margin: 3rem;
+  width: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .loginForm {
-    margin-top: 3rem;
-    padding-bottom: 3rem;
-    width: 500px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: nowrap;
-    margin-left: auto;
-    margin-right: auto;
+  margin-top: 3rem;
+  padding-bottom: 3rem;
+  width: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 #loginImage {
-    margin: 3rem;
-    width: '100px';
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: nowrap;
-    margin-left: auto;
-    margin-right: auto;
-    
+  margin: 3rem;
+  width: "100px";
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.invalid {
+  padding: 5px;
+  background-color: rgb(200, 6, 6);
+  color: white;
+  border: 1px solid rgb(198, 193, 193);
+  width: fit-content;
+  margin: 0 auto 10px auto;
+  border-radius: 5px;
+  font-weight: bold;
 }
 
 @media only screen and (max-width: 600px) {
-    .loginForm {
-        width: 75%;
-    }
+  .loginForm {
+    width: 75%;
   }
+}

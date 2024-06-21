@@ -1,26 +1,26 @@
-import React, { useState, useEffect } from 'react'
-import { auth, db } from '../../firebase'
+import React, { useState, useEffect } from "react";
+import { auth } from "../../firebase";
 import { NeedToLogin } from "../login_reg/needtologin";
 
-  
 export const Account = () => {
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((authUser) => {
-      if (authUser) setUser(authUser)
-      else setUser(null)
-      return () => unsubscribe()
-    })
-  }, [user])
+      if (authUser) setUser(authUser);
+      else setUser(null);
+      return () => unsubscribe();
+    });
+  }, [user]);
 
   return (
     <>
-      {user ? <div className="account"> 
-        <div className="header">
-          <h1 id="account">Account</h1>
-        </div>
-        <article className='column'>
+      {user ? (
+        <div className="account">
+          <div className="header">
+            <h1 id="account">Account</h1>
+          </div>
+          <article className="column">
             {/* {user?.picture && <img id="user-picture" src={user.picture} alt={user?.name} />}
             <h2>{user?.name}</h2>
             <div className="user-details">
@@ -32,10 +32,11 @@ export const Account = () => {
             {/* <ul>
                 {Object.keys(user).map((objKey, i) => <li key={i}>{objKey}: {user[objKey]}</li>)}
             </ul> */}
-        </article>
-      </div> : <NeedToLogin />}
+          </article>
+        </div>
+      ) : (
+        <NeedToLogin />
+      )}
     </>
   );
 };
-  
- 

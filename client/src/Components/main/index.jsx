@@ -1,6 +1,5 @@
 import "./assets/style.css";
 
-
 export { Welcome } from "./welcome";
 export { Home } from "./home";
 export { Contact } from "./contact";
