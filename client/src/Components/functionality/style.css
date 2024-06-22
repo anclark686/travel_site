@@ -134,7 +134,8 @@ progress::-webkit-progress-bar {
 .details_image {
   width: 75%;
   margin: 10px auto;
-  border-radius: 5px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 15px 2px rgba(0, 0, 0, 0.28);
 }
 
 .details_card,
@@ -146,6 +147,22 @@ progress::-webkit-progress-bar {
 .post_comments {
   text-align: left;
   margin: 20px;
+}
+
+.comment-data {
+  padding: 10px;
+  background-color: rgb(245, 245, 245);
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
+
+.comment-data p {
+  margin-bottom: 0;
+}
+
+.timestamp {
+  font-size: 0.75rem;
+  font-style: italic;
 }
 
 .dropdown-toggle {
@@ -176,6 +193,21 @@ progress::-webkit-progress-bar {
 .check input {
   margin-right: 10px;
   accent-color: #55d2f1;
+}
+
+.post_commentBox {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+  flex-direction: column;
+}
+
+#post_input {
+  width: 400px;
+}
+
+.post_button {
+  margin-top: 10px;
 }
 
 @media only screen and (max-width: 600px) {

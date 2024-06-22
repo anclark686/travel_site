@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, doc, setDoc, addDoc } from "firebase/firestore";
 import { Card } from "react-bootstrap";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
@@ -46,6 +46,7 @@ export const Create = () => {
     setProgress(0);
     setMsg("");
     setPreviewUrl(null);
+    setPublicAvail(false);
   };
 
   const handleUpload = async () => {
@@ -75,7 +76,9 @@ export const Create = () => {
         },
         () => {
           getDownloadURL(imageUpload.snapshot.ref).then(async (downloadURL) => {
-            await addDoc(collection(db, `posts/${user.uid}/images`), {
+            const baseUrl = `posts/${user.uid}/images`;
+
+            await addDoc(collection(db, baseUrl), {
               timestamp: new Date(),
               title: title,
               location: location,
@@ -83,22 +86,19 @@ export const Create = () => {
               imageUrl: downloadURL,
               username: user.displayName,
               public: publicAvail,
+              userId: user.uid,
             });
+
             if (publicAvail) {
-              await addDoc(collection(db, `posts/public/images`), {
-                timestamp: new Date(),
-                title: title,
-                location: location,
-                caption: caption,
-                imageUrl: downloadURL,
-                username: user.displayName,
-                public: true,
+              await addDoc(collection(db, `posts/public/references`), {
+                reference: baseUrl,
               });
             }
+
             setMsg("Success! Image Uploaded");
             setPreviewUrl(downloadURL);
           });
-        }
+        },
       );
     } catch (e) {
       console.error("Error adding document: ", e);
@@ -178,7 +178,9 @@ export const Create = () => {
                         className="image-preview"
                       />
                     ) : (
-                      <Loading />
+                      <div className="spacer">
+                        <Loading />
+                      </div>
                     )}
                     <button
                       className="btn btn-dark choices"

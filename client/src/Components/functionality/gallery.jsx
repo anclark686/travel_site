@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { collection, query, getDocs } from "firebase/firestore";
+import { collection, query, getDocs, where } from "firebase/firestore";
 
 import { auth, db } from "../../firebase";
 import Post from "./post";
+import Loading from "../layouts/loading";
 
 export const Gallery = () => {
   const [posts, setPosts] = useState([]);
@@ -26,17 +27,29 @@ export const Gallery = () => {
   }, [user]);
 
   const getPosts = async () => {
-    const tempPosts = [];
-    const q = query(collection(db, "posts/public/images"));
+    const tempPosts = {};
 
+    const q = query(collection(db, "posts/public/references"));
     const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      tempPosts.push({
-        id: doc.id,
-        post: doc.data(),
+    querySnapshot.forEach(async (doc) => {
+      const newQ = query(
+        collection(db, doc.data().reference),
+        where("public", "==", true),
+      );
+      const newQuerySnapshot = await getDocs(newQ);
+      newQuerySnapshot.forEach((reference) => {
+        const data = {
+          id: reference.id,
+          post: reference.data(),
+        };
+
+        if (!Object.keys(tempPosts).includes(data.id)) {
+          tempPosts[data.id] = data;
+        }
       });
+
+      setPosts(Object.values(tempPosts));
     });
-    setPosts(tempPosts);
   };
 
   return (
@@ -44,57 +57,62 @@ export const Gallery = () => {
       <div className="header">
         <h1 id="details">Gallery</h1>
       </div>
+      {!pageLoading ? (
+        <>
+          {user ? (
+            <div className="search-add-btn-container">
+              <div className="search_button">
+                <button className="btn btn-dark choices">
+                  <Link to={"/search"}>Search</Link>
+                </button>
+              </div>
+              <div className="add_new_button">
+                <button className="btn btn-dark choices">
+                  <Link to={"/create"}>Add New</Link>
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="search_button">
+              <button className="btn btn-dark choices">
+                <Link to={"/search"}>Search</Link>
+              </button>
+            </div>
+          )}
 
-      {user ? (
-        <div className="search-add-btn-container">
-        <div className="search_button">
-          <button className="btn btn-dark choices">
-            <Link to={"/search"}>Search</Link>
-          </button>
-        </div>
-        <div className="add_new_button">
-          <button className="btn btn-dark choices">
-            <Link to={"/create"}>Add New</Link>
-          </button>
-        </div>
-      </div>
+          <div className="posts">
+            {posts.length > 0 ? (
+              <>
+                {posts.map(({ id, post }) => (
+                  <Link
+                    key={id}
+                    className="gallery_links"
+                    to="/details"
+                    state={{ post: post, postId: id }}
+                  >
+                    <Post
+                      key={id}
+                      postId={id}
+                      user={user}
+                      username={post.username}
+                      title={post.title}
+                      location={post.location}
+                      caption={post.caption}
+                      imageUrl={post.imageUrl}
+                    />
+                  </Link>
+                ))}
+              </>
+            ) : (
+              <>
+                <h1 className="nada">Nothing to see here!</h1>
+              </>
+            )}
+          </div>
+        </>
       ) : (
-        <div className="search_button">
-        <button className="btn btn-dark choices">
-          <Link to={"/search"}>Search</Link>
-        </button>
-      </div>
+        <Loading />
       )}
-
-      <div className="posts">
-        {posts.length > 0 ? (
-          <>
-          {posts.map(({ id, post }) => (
-            <Link
-              key={id}
-              className="gallery_links"
-              to="/details"
-              state={{ post: post, postId: id }}
-            >
-              <Post
-                key={id}
-                postId={id}
-                user={user}
-                username={post.username}
-                title={post.title}
-                location={post.location}
-                caption={post.caption}
-                imageUrl={post.imageUrl}
-              />
-            </Link>
-          ))}
-          </>
-        ): (
-          <>
-            <h1 className="nada">Nothing to see here!</h1>
-          </>
-        )}
-      </div>
     </div>
   );
 };

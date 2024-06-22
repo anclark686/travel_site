@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import firebase from "firebase/compat/app";
-import { Card } from "react-bootstrap";
+import {
+  collection,
+  addDoc,
+  query,
+  getDocs,
+  orderBy,
+} from "firebase/firestore";
+import { Card, Form } from "react-bootstrap";
 
 import { auth, db } from "../../firebase";
 
@@ -17,41 +23,45 @@ export const Details = () => {
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((authUser) => {
-      if (authUser) setUser(authUser);
-      else setUser(null);
+      if (authUser) {
+        setUser(authUser);
+        getComments();
+      } else {
+        setUser(null);
+        getComments();
+      }
       return () => unsubscribe();
     });
   }, [user]);
 
-  useEffect(() => {
-    let unsubscribe;
-    if (postId) {
-      unsubscribe = db
-        .collection("posts")
-        .doc(postId)
-        .collection("comments")
-        .onSnapshot((snapshot) => {
-          setComments(
-            snapshot.docs.map((doc) => ({
-              id: doc.id,
-              comment: doc.data(),
-            })),
-          );
-        });
-    }
-    return () => {
-      unsubscribe();
-    };
-  }, []);
+  const getComments = async () => {
+    const tempComments = [];
 
-  const postComment = (e) => {
-    e.preventDefault();
-    db.collection("posts").doc(postId).collection("comments").add({
-      text: comment,
-      username: user.displayName,
-      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    const path = `posts/${post.userId}/images/${postId}/comments`;
+    const q = query(collection(db, path), orderBy("timestamp", "desc"));
+
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((comment) => {
+      tempComments.push({
+        id: comment.id,
+        comment: comment.data(),
+      });
     });
+    setComments(tempComments);
+  };
+
+  const postComment = async (e) => {
+    e.preventDefault();
+    await addDoc(
+      collection(db, `posts/${post.userId}/images/${postId}/comments`),
+      {
+        text: comment,
+        username: user.displayName,
+        timestamp: new Date(),
+      },
+    );
     setComment("");
+    getComments();
   };
 
   return (
@@ -70,30 +80,38 @@ export const Details = () => {
 
         <Card className="comments_card">
           {user && (
-            <form className="post_commentBox">
-              <input
-                className="post_input"
-                type="text"
-                placeholder="Add a comment..."
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-              />
+            <Form className="post_commentBox">
+              <Form.Group>
+                <Form.Control
+                  as="textarea"
+                  rows={3}
+                  id="post_input"
+                  placeholder="Add a comment..."
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                />
+              </Form.Group>
               <button
                 disabled={!comment}
-                className="post_button"
+                className="btn btn-dark post_button"
                 type="submit"
                 onClick={postComment}
               >
                 Post
               </button>
-            </form>
+            </Form>
           )}
 
           <div className="post_comments">
-            {comments.map(({ id, comment }) => (
-              <p key={id}>
-                <strong>{comment.username}</strong> {comment.text}
-              </p>
+            {comments.map(({ id, comment }, i) => (
+              <div className="comment-data">
+                <p key={id}>
+                  <strong>{comment.username}:</strong> {comment.text}
+                </p>
+                <p className="timestamp">
+                  {comment.timestamp.toDate().toLocaleString("en-US")}
+                </p>
+              </div>
             ))}
           </div>
         </Card>

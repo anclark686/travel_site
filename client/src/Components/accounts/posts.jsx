@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { collection, query, getDocs } from "firebase/firestore";
+import { collection, query, getDocs, orderBy } from "firebase/firestore";
 
 import { auth, db } from "../../firebase";
 import { NeedToLogin } from "../login_reg/needtologin";
@@ -29,7 +29,8 @@ export const Posts = () => {
   const getResults = async () => {
     const tempPosts = [];
     if (user) {
-      const q = query(collection(db, `posts/${user.uid}/images`));
+      const path = `posts/${user.uid}/images`;
+      const q = query(collection(db, path), orderBy("timestamp", "desc"));
 
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {

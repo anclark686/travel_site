@@ -20,11 +20,10 @@ export const Login = () => {
   const navigate = useNavigate();
 
   const loginMethod = async (e) => {
-    signInWithEmailAndPassword(auth, email, password)
-      .catch((err) => {
-        console.log(err.message);
-        setLoggedInErr(err.message);
-      });
+    signInWithEmailAndPassword(auth, email, password).catch((err) => {
+      console.log(err.message);
+      setLoggedInErr(err.message);
+    });
   };
 
   useEffect(() => {
@@ -32,8 +31,7 @@ export const Login = () => {
       if (authUser) {
         setUser(authUser);
         navigate("/welcome");
-      } 
-      else setUser(null);
+      } else setUser(null);
       return () => unsubscribe();
     });
   }, [user]);
