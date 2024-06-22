@@ -64,37 +64,37 @@ export const Posts = () => {
                 </div>
               </div>
 
-              {/* <div className="sort-post-dropdown">
-          <label htmlFor="sort-by">Sort by:</label>
-          <select name="sort-by" id="sort-by-dropdown">
-            <option value="name-a">Name Ascending</option>
-            <option value="name-d">Name Descending</option>
-            <option value="date-a">Date Ascending</option>
-            <option value="date-d">Date Descending</option>
-          </select>
-          </div> */}
-
               <div className="posts">
-                {posts.map(({ id, post }) => (
-                  <Link
-                    key={id}
-                    className="gallery_links"
-                    to="/details"
-                    state={{ post: post, postId: id }}
-                  >
-                    <Post
-                      key={id}
-                      postId={id}
-                      user={user}
-                      username={post.username}
-                      title={post.title}
-                      location={post.location}
-                      caption={post.caption}
-                      imageUrl={post.imageUrl}
-                      publicAvail={post.public}
-                    />
-                  </Link>
-                ))}
+                {posts.length > 0 ? (
+                  <>
+                    {posts.map(({ id, post }) => (
+                      <Link
+                        key={id}
+                        className="gallery_links"
+                        to="/details"
+                        state={{ post: post, postId: id }}
+                      >
+                        <Post
+                          key={id}
+                          postId={id}
+                          user={user}
+                          username={post.username}
+                          title={post.title}
+                          location={post.location}
+                          caption={post.caption}
+                          imageUrl={post.imageUrl}
+                          publicAvail={post.public}
+                        />
+                      </Link>
+                    ))}
+                  </>
+                ) : (
+                  <>
+                    <h1 className="nada">
+                      Nothing to see here! Click 'Add New' to get started.
+                    </h1>
+                  </>
+                )}
               </div>
             </div>
           ) : (

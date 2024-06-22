@@ -91,7 +91,7 @@ export const Gallery = () => {
           </>
         ): (
           <>
-            <h1>No posts yet</h1>
+            <h1 className="nada">Nothing to see here!</h1>
           </>
         )}
       </div>
