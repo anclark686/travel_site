@@ -1,7 +1,9 @@
-import "./assets/style.css";
+import React from "react";
 import { Link } from "react-router-dom";
 
-const loginImage = require("./assets/login.png");
+import "./assets/style.css";
+
+import loginImage from "./assets/login.png";
 
 export const NeedToLogin = () => {
   return (

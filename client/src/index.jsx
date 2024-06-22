@@ -11,5 +11,5 @@ root.render(
     <Container className="p-0 " fluid={true}>
       <App />
     </Container>
-  </div>,
+  </div>
 );

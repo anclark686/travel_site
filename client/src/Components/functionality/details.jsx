@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { auth, db } from "../../firebase";
 import firebase from "firebase/compat/app";
 import { Card } from "react-bootstrap";
+
+import { auth, db } from "../../firebase";
 
 export const Details = () => {
   const [comments, setComments] = useState([]);

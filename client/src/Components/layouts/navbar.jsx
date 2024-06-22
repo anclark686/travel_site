@@ -1,10 +1,12 @@
 import { React, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Navbar, Container, Offcanvas, Button } from "react-bootstrap";
-import "./assets/style.css";
-import { auth } from "../../firebase";
 
-const logo = require("./assets/AC_ICON.png");
+import { auth } from "../../firebase";
+import "./assets/style.css";
+
+import logo from "./assets/REYALYicon.png";
+
 const menuName = [
   {
     name: "Menu",
@@ -25,20 +27,9 @@ function MenuOffCanvas({ name, ...props }) {
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((authUser) => {
-      if (authUser) {
-        // user has logged in...
-        // console.log(authUser)
-        setUser(authUser);
-        console.log(user);
-      } else {
-        // user has logged out...
-        console.log(user);
-        setUser(null);
-      }
-      return () => {
-        // perform some cleanup actions
-        unsubscribe();
-      };
+      if (authUser) setUser(authUser);
+      else setUser(null);
+      return () => unsubscribe();
     });
   }, [user]);
 
@@ -168,11 +159,11 @@ function Nav() {
         <Container>
           <Navbar.Brand>
             <img
-              alt=""
+              alt="logo"
               src={logo}
               width="30"
               height="30"
-              className="d-inline-block align-left"
+              className="d-inline-block align-left logo"
             />{" "}
             <Link to={"/"}>
               <div className="d-inline-block" id="brand">

@@ -4,6 +4,10 @@
   font-weight: bold;
 }
 
+.logo {
+  border-radius: 5px;
+}
+
 .phantom {
   display: block;
   padding: 20px;
@@ -25,4 +29,8 @@
 
 .logout {
   margin-top: 10px;
+}
+
+.loading-button {
+  margin: 20px auto;
 }

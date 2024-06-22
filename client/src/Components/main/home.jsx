@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { auth } from "../../firebase";
 import { Link } from "react-router-dom";
 
-const chicago = require("./assets/chicago.jpg");
-const atlanta = require("./assets/Atlanta.jpg");
-const beach = require("./assets/beach1.jpg");
-const waterfall = require("./assets/waterfall1.jpg");
+import { auth } from "../../firebase";
+
+import chicago from "./assets/chicago.jpg";
+import atlanta from "./assets/Atlanta.jpg";
+import beach from "./assets/beach1.jpg";
+import waterfall from "./assets/waterfall1.jpg";
 
 export const Home = () => {
   const [user, setUser] = useState(null);

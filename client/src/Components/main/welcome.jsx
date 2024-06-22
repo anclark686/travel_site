@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+
 import { auth } from "../../firebase";
 import { NeedToLogin } from "../login_reg/needtologin";
 
-const charlotte = require("./assets/charlotte.JPG");
-const gotg = require("./assets/gotg.jpg");
-const beach = require("./assets/beach3.jpg");
-const toronto = require("./assets/toronto.jpg");
+import charlotte from "./assets/charlotte.jpg";
+import gotg from "./assets/gotg.jpg";
+import beach from "./assets/beach3.jpg";
+import toronto from "./assets/toronto.jpg";
 
 export const Welcome = () => {
   const [user, setUser] = useState(null);
@@ -31,12 +32,7 @@ export const Welcome = () => {
           </div>
 
           <div className="welcome-options">
-            <h1>
-              Welcome{" "}
-              {user.displayName[0].toUpperCase() +
-                user.displayName.substring(1)}
-              !
-            </h1>
+            <h1 id="welcome">Welcome {user.displayName}!</h1>
             <button className="btn btn-dark choices">
               <Link to={"/create"}>Create a Post</Link>
             </button>

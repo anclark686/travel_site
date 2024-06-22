@@ -53,7 +53,6 @@ export const FormPage = (props) => {
         message_html: formData.message,
         email: formData.email,
       });
-      console.log(formData, 1);
       updateFormData(initialFormData);
       clearForm();
       setValidated(false);

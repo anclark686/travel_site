@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { collection, addDoc } from "firebase/firestore";
+import { Card } from "react-bootstrap";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+
 import { auth, db, storage } from "../../firebase";
 import { NeedToLogin } from "../login_reg/needtologin";
-import firebase from "firebase/compat/app";
-import { Card } from "react-bootstrap";
+import Loading from "../layouts/loading";
 
 export const Create = () => {
   const [user, setUser] = useState(null);
@@ -12,11 +15,19 @@ export const Create = () => {
   const [location, setLocation] = useState("");
   const [caption, setCaption] = useState("");
   const [msg, setMsg] = useState("");
+  const [pageLoading, setPageLoading] = useState(true);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [publicAvail, setPublicAvail] = useState(false);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((authUser) => {
-      if (authUser) setUser(authUser);
-      else setUser(null);
+      if (authUser) {
+        setUser(authUser);
+        setPageLoading(false);
+      } else {
+        setUser(null);
+        setPageLoading(false);
+      }
       return () => unsubscribe();
     });
   }, [user]);
@@ -27,94 +38,166 @@ export const Create = () => {
     }
   };
 
-  const handleUpload = () => {
-    const uploadTask = storage.ref(`images/${image.name}`).put(image);
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        // progress function...
-        const progress = Math.round(
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100,
-        );
-        setProgress(progress);
-      },
-      (err) => {
-        // Error function
-        console.log(err);
-      },
-      () => {
-        // Complete function...
-        storage
-          .ref("images")
-          .child(image.name)
-          .getDownloadURL()
-          .then((url) => {
-            // post image inside db
-            db.collection("posts").add({
-              timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+  const clearData = () => {
+    setImage(null);
+    setTitle("");
+    setLocation("");
+    setCaption("");
+    setProgress(0);
+    setMsg("");
+    setPreviewUrl(null);
+  };
+
+  const handleUpload = async () => {
+    try {
+      const imageRef = ref(storage, `images/${user.uid}/${image.name}`);
+      const imageUpload = uploadBytesResumable(imageRef, image);
+
+      imageUpload.on(
+        "state_changed",
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+
+          setProgress(progress);
+
+          switch (snapshot.state) {
+            case "paused":
+              console.log("Upload is paused");
+              break;
+            case "running":
+              console.log("Upload is running");
+              break;
+          }
+        },
+        (error) => {
+          console.log(error);
+        },
+        () => {
+          getDownloadURL(imageUpload.snapshot.ref).then(async (downloadURL) => {
+            await addDoc(collection(db, `posts/${user.uid}/images`), {
+              timestamp: new Date(),
               title: title,
               location: location,
               caption: caption,
-              imageUrl: url,
+              imageUrl: downloadURL,
               username: user.displayName,
+              public: publicAvail,
             });
-            setProgress(0);
-            setCaption("");
-            setImage(null);
-            setMsg("Image Uploaded");
+            if (publicAvail) {
+              await addDoc(collection(db, `posts/public/images`), {
+                timestamp: new Date(),
+                title: title,
+                location: location,
+                caption: caption,
+                imageUrl: downloadURL,
+                username: user.displayName,
+                public: true,
+              });
+            }
+            setMsg("Success! Image Uploaded");
+            setPreviewUrl(downloadURL);
           });
-      },
-    );
+        }
+      );
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
   };
 
   return (
     <>
-      {user ? (
-        <div className="create">
-          <div className="header">
-            <h1 id="create">Create</h1>
-          </div>
+      {!pageLoading ? (
+        <>
+          {user ? (
+            <div className="create">
+              <div className="header">
+                <h1 id="create">Create a Post</h1>
+              </div>
 
-          <Card className="create_card">
-            <p>{msg}</p>
-            <progress
-              value={progress}
-              max="100"
-              className="imageUpload_progress"
-            />
-            <input
-              type="text"
-              placeholder="Enter a Title"
-              onChange={(e) => setTitle(e.target.value)}
-              value={title}
-              className="imageUpload_input"
-            />
-            <input
-              type="text"
-              placeholder="Enter a Location"
-              onChange={(e) => setLocation(e.target.value)}
-              value={location}
-              className="imageUpload_input"
-            />
-            <input
-              type="text"
-              placeholder="Enter a Caption"
-              onChange={(e) => setCaption(e.target.value)}
-              value={caption}
-              className="imageUpload_input"
-            />
-            <input
-              type="file"
-              onChange={handleChange}
-              className="imageUpload_file"
-            />
-            <button className="btn btn-dark choices" onClick={handleUpload}>
-              Upload
-            </button>
-          </Card>
-        </div>
+              <Card className="create_card">
+                {progress !== 100 ? (
+                  <>
+                    <progress
+                      value={progress}
+                      max="100"
+                      className="imageUpload_progress"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Enter a Title"
+                      onChange={(e) => setTitle(e.target.value)}
+                      value={title}
+                      className="imageUpload_input"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Enter a Location"
+                      onChange={(e) => setLocation(e.target.value)}
+                      value={location}
+                      className="imageUpload_input"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Enter a Caption"
+                      onChange={(e) => setCaption(e.target.value)}
+                      value={caption}
+                      className="imageUpload_input"
+                    />
+                    <div className="final-row">
+                      <input
+                        type="file"
+                        onChange={handleChange}
+                        className="imageUpload_file"
+                      />
+                      <div className="check">
+                        <input
+                          type="checkbox"
+                          name="public"
+                          id="public"
+                          onChange={(e) => setPublicAvail(e.target.checked)}
+                        />
+                        <label htmlFor="public">Public?</label>
+                      </div>
+                    </div>
+                    <button
+                      className="btn btn-dark choices"
+                      onClick={handleUpload}
+                    >
+                      Upload
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <p>{msg}</p>
+                    <h3>Preview</h3>
+                    {previewUrl ? (
+                      <img
+                        src={previewUrl}
+                        alt="Preview"
+                        className="image-preview"
+                      />
+                    ) : (
+                      <Loading />
+                    )}
+                    <button
+                      className="btn btn-dark choices"
+                      onClick={clearData}
+                    >
+                      Add New
+                    </button>
+                  </>
+                )}
+              </Card>
+            </div>
+          ) : (
+            <NeedToLogin />
+          )}
+        </>
       ) : (
-        <NeedToLogin />
+        <>
+          <Loading />
+        </>
       )}
     </>
   );

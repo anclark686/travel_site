@@ -1,7 +1,8 @@
 import React from "react";
 import FormPage from "./contactEmail";
 
-const contactImage = require("./assets/apple.png");
+import contactImage from "./assets/apple.png";
+
 export const Contact = () => {
   return (
     <div>

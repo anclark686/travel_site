@@ -1,11 +1,11 @@
 import { React, useState, useEffect } from "react";
 import { Form, Button, Card } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
+import { signInWithEmailAndPassword } from "firebase/auth";
+
 import { auth } from "../../firebase";
 
-// <a href="https://www.flaticon.com/free-icons/login" title="login icons">Login icons created by Freepik - Flaticon</a>
-
-const loginImage = require("./assets/login.png");
+import loginImage from "./assets/login.png";
 
 export const Login = () => {
   const [validated, setValidated] = useState(false);
@@ -20,28 +20,21 @@ export const Login = () => {
   const navigate = useNavigate();
 
   const loginMethod = async (e) => {
-    auth.signInWithEmailAndPassword(email, password).catch((err) => {
-      console.log(err.message);
-      setLoggedInErr(err.message);
-    });
+    signInWithEmailAndPassword(auth, email, password)
+      .catch((err) => {
+        console.log(err.message);
+        setLoggedInErr(err.message);
+      });
   };
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((authUser) => {
       if (authUser) {
-        // user has logged in...
-        console.log(authUser);
         setUser(authUser);
-        console.log("success!");
         navigate("/welcome");
-      } else {
-        // user has logged out...
-        setUser(null);
-      }
-      return () => {
-        // perform some cleanup actions
-        unsubscribe();
-      };
+      } 
+      else setUser(null);
+      return () => unsubscribe();
     });
   }, [user]);
 

@@ -1,9 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
+
 import "./assets/style.css";
 
-const github = require("./assets/github.png");
-const linkedin = require("./assets/linkedin.png");
+import github from "./assets/github.png";
+import linkedin from "./assets/linkedin.png";
 
 const Footer = () => {
   const today = new Date();

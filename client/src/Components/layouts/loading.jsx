@@ -1,3 +1,4 @@
+import React from "react";
 import { Spinner, Button } from "react-bootstrap";
 
 const Loading = () => {

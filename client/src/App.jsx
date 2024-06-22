@@ -8,7 +8,6 @@ import {
   Details,
   Create,
   Gallery,
-  Success,
 } from "./Components/functionality/index";
 import { Login, Register } from "./Components/login_reg/index";
 import Layout from "./Components/layouts/layout";
@@ -26,7 +25,6 @@ function App() {
             <Route path="about" element={<About />} />
             <Route path="contact" element={<Contact />} />
             <Route path="account" element={<Account />} />
-            <Route path="success" element={<Success />} />
             <Route path="settings" element={<Settings />} />
             <Route path="search" element={<Search />} />
             <Route path="details" element={<Details />} />
