@@ -178,19 +178,18 @@ export const Create = () => {
                       </div>
                     )}
                     <div className="create-btn-container">
-                    <button
-                      className="btn btn-dark choices"
-                      onClick={clearData}
-                    >
-                      Add New
-                    </button>
-                    <Link to={"/posts"}>
-                      <div className="btn btn-dark choices" id="posts">
-                        View Your Posts
-                      </div>
-                    </Link>
+                      <button
+                        className="btn btn-dark choices"
+                        onClick={clearData}
+                      >
+                        Add New
+                      </button>
+                      <Link to={"/posts"}>
+                        <div className="btn btn-dark choices" id="posts">
+                          View Your Posts
+                        </div>
+                      </Link>
                     </div>
-                    
                   </>
                 )}
               </Card>
