@@ -2,8 +2,9 @@ import { React, useState, useEffect } from "react";
 import { Form, Button, Card, Row } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { collection, addDoc } from "firebase/firestore";
 
-import { auth } from "../../firebase";
+import { auth, db } from "../../firebase";
 
 import loginImage from "./assets/login.png";
 
@@ -25,12 +26,17 @@ export const Register = () => {
 
   const createUser = (e) => {
     createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
+      .then(async (userCredential) => {
         updateProfile(userCredential.user, {
           displayName: username,
         }).catch((error) => {
           console.log(error);
         });
+
+        const path = `posts/${userCredential.user.uid}/public`;
+        await addDoc(collection(db, `posts/public/references`), {
+              reference: path,
+            });
       })
       .catch((error) => {
         const errorCode = error.code;

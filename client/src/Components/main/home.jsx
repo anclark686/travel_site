@@ -42,9 +42,6 @@ export const Home = () => {
         ) : (
           <div className="home_buttons">
             <button className="btn btn-dark choices">
-              <Link to={"/gallery"}>Gallery</Link>
-            </button>
-            <button className="btn btn-dark choices">
               <Link to={"/login"}>Login</Link>
             </button>
           </div>

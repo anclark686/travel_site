@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { collection, doc, setDoc, addDoc } from "firebase/firestore";
+import { collection, addDoc } from "firebase/firestore";
 import { Card } from "react-bootstrap";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
@@ -76,9 +76,9 @@ export const Create = () => {
         },
         () => {
           getDownloadURL(imageUpload.snapshot.ref).then(async (downloadURL) => {
-            const baseUrl = `posts/${user.uid}/images`;
+            const path = `posts/${user.uid}/${publicAvail ? "public" : "private"}`;
 
-            await addDoc(collection(db, baseUrl), {
+            await addDoc(collection(db, path), {
               timestamp: new Date(),
               title: title,
               location: location,
@@ -89,11 +89,11 @@ export const Create = () => {
               userId: user.uid,
             });
 
-            if (publicAvail) {
-              await addDoc(collection(db, `posts/public/references`), {
-                reference: baseUrl,
-              });
-            }
+            // if (publicAvail) {
+            //   await addDoc(collection(db, `posts/public/references`), {
+            //     reference: path,
+            //   });
+            // }
 
             setMsg("Success! Image Uploaded");
             setPreviewUrl(downloadURL);

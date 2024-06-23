@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { collection, query, getDocs } from "firebase/firestore";
+import { collection, query, getDocs, where } from "firebase/firestore";
 import {
   Dropdown,
   DropdownButton,
@@ -28,56 +28,85 @@ export const Search = () => {
     const unsubscribe = auth.onAuthStateChanged((authUser) => {
       if (authUser) {
         setUser(authUser);
-        setPageLoading(false);
-        getInitialPosts();
+        getInitialPosts("all");
       } else {
         setUser(null);
-        setPageLoading(false);
-        getInitialPosts();
       }
       return () => unsubscribe();
     });
   }, [user]);
 
-  const getInitialPosts = async () => {
-    const tempPosts = [];
+  const getUsersPosts = async () => {
+    setPageLoading(true);
+    const tempPosts = {};
 
-    if (user) {
-      const privQuery = query(collection(db, `posts/${user.uid}/images`));
-      const privQuerySnapshot = await getDocs(privQuery);
-      privQuerySnapshot.forEach((doc) => {
-        tempPosts.push({
-          id: doc.id,
-          post: doc.data(),
-        });
-      });
+    const privQuery = query(collection(db, `posts/${user.uid}/private`));
+    const privQuerySnapshot = await getDocs(privQuery);
+    privQuerySnapshot.forEach((doc) => {
+      tempPosts[doc.id] = {
+        id: doc.id,
+        post: doc.data(),
+      };
+    });
 
-      const pubQuery = query(collection(db, `posts/public/images`));
-      const pubQuerySnapshot = await getDocs(pubQuery);
-      pubQuerySnapshot.forEach((doc) => {
-        if (doc.data().username !== user.displayName) {
-          tempPosts.push({
-            id: doc.id,
-            post: doc.data(),
-          });
-        }
-      });
-    } else {
-      const pubQuery = query(collection(db, `posts/public/images`));
-      const pubQuerySnapshot = await getDocs(pubQuery);
-      pubQuerySnapshot.forEach((doc) => {
-        tempPosts.push({
-          id: doc.id,
-          post: doc.data(),
-        });
-      });
-    }
+    const pubQuery = query(collection(db, `posts/${user.uid}/public`));
+    const pubQuerySnapshot = await getDocs(pubQuery);
+    pubQuerySnapshot.forEach((doc) => {
+      tempPosts[doc.id] = {
+        id: doc.id,
+        post: doc.data(),
+      };
+    });
 
-    setPosts(tempPosts);
-    setSearchPosts(tempPosts);
+    return tempPosts;
   };
 
-  const searchDB = () => {
+  const getInitialPosts = async (scope) => {
+    if (user) {
+      let allPosts = {};
+      getUsersPosts().then(async (data) => {
+        console.log(data);
+        allPosts = { ...allPosts, ...data };
+        console.log("what")
+        console.log(scope)
+        if (scope === "all") {
+          
+          const q = query(collection(db, "posts/public/references"));
+          const querySnapshot = await getDocs(q);
+          querySnapshot.forEach(async (doc) => {
+            const newQ = query(
+              collection(db, doc.data().reference),
+              where("public", "==", true)
+            );
+            const newQuerySnapshot = await getDocs(newQ);
+            newQuerySnapshot.forEach((reference) => {
+              const data = {
+                id: reference.id,
+                post: reference.data(),
+              };
+              console.log("you here?");
+              console.log(data);
+              console.log(!Object.keys(allPosts).includes(data.id));
+              console.log(!user.uid === data.post.userId);
+              if (!Object.keys(allPosts).includes(data.id)) {
+                allPosts[data.id] = data;
+              }
+            });
+
+            setPosts(Object.values(allPosts));
+            setSearchPosts(Object.values(allPosts));
+            setPageLoading(false);
+          });
+        } else {
+          setPosts(Object.values(allPosts));
+          setSearchPosts(Object.values(allPosts));
+          setPageLoading(false);
+        }
+      });
+    }
+  };
+
+  const searchDB = (scope) => {
     let newPosts = [];
 
     posts.forEach((element) => {
@@ -149,6 +178,13 @@ export const Search = () => {
     }
   };
 
+  const changeScope = (value) => {
+    console.log(value);
+    setScope(value);
+    getInitialPosts(value);
+  };
+
+
   return (
     <>
       {!pageLoading ? (
@@ -161,26 +197,28 @@ export const Search = () => {
 
               <div className="search-filters ">
                 <InputGroup className="search-bar">
-                  <div className="radio-search">
-                    <Form>
-                      <Form.Check
-                        inline
-                        type="radio"
-                        id="user-posts"
-                        name="group1"
-                        label="Only your posts"
-                        onClick={() => setScope("user")}
-                      />
-                      <Form.Check
-                        inline
-                        type="radio"
-                        id="all-posts"
-                        name="group1"
-                        label="All posts"
-                        onClick={() => setScope("all")}
-                      />
-                    </Form>
-                  </div>
+                  {user ? (
+                    <div className="radio-search">
+                      <Form>
+                        <Form.Check
+                          inline
+                          type="radio"
+                          id="user-posts"
+                          name="group1"
+                          label="Only your posts"
+                          onClick={() => changeScope("user")}
+                        />
+                        <Form.Check
+                          inline
+                          type="radio"
+                          id="all-posts"
+                          name="group1"
+                          label="All posts"
+                          onClick={() => changeScope("all")}
+                        />
+                      </Form>
+                    </div>
+                  ) : null}
 
                   <DropdownButton
                     className="search-button"
@@ -230,8 +268,8 @@ export const Search = () => {
                 </InputGroup>
               </div>
 
-              {msg ? (
-                <h1 style={{ textAlign: "center" }}>No Results</h1>
+              {searchPosts.length === 0 ? (
+                <h1 style={{ textAlign: "center" }}>No Results Found. Try adjusting your search filters.</h1>
               ) : (
                 <div className="posts">
                   {searchPosts.map(({ id, post }) => (

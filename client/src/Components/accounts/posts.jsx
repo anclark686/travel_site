@@ -16,7 +16,6 @@ export const Posts = () => {
     const unsubscribe = auth.onAuthStateChanged((authUser) => {
       if (authUser) {
         setUser(authUser);
-        setPageLoading(false);
         getResults();
       } else {
         setUser(null);
@@ -29,17 +28,29 @@ export const Posts = () => {
   const getResults = async () => {
     const tempPosts = [];
     if (user) {
-      const path = `posts/${user.uid}/images`;
-      const q = query(collection(db, path), orderBy("timestamp", "desc"));
+      let path = `posts/${user.uid}/public`;
+      const qPublic = query(collection(db, path), orderBy("timestamp", "desc"));
 
-      const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((doc) => {
+      const publicQuerySnapshot = await getDocs(qPublic);
+      publicQuerySnapshot.forEach((doc) => {
+        tempPosts.push({
+          id: doc.id,
+          post: doc.data(),
+        });
+      });
+
+      path = `posts/${user.uid}/private`;
+      const qPrivate = query(collection(db, path), orderBy("timestamp", "desc"));
+
+      const privateQuerySnapshot = await getDocs(qPrivate);
+      privateQuerySnapshot.forEach((doc) => {
         tempPosts.push({
           id: doc.id,
           post: doc.data(),
         });
       });
       setPosts(tempPosts);
+      setPageLoading(false);
     }
   };
 

@@ -124,11 +124,6 @@ function MenuOffCanvas({ name, ...props }) {
                   </div>
                 </Link>
               </div>
-              <Link to={"/gallery"} onClick={toggleShow}>
-                <div className="nav-menu" id="gallery">
-                  Public Gallery
-                </div>
-              </Link>
               <Link to={"/"} onClick={toggleShow}>
                 <div className="nav-menu" id="home">
                   Home
