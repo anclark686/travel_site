@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { collection, addDoc } from "firebase/firestore";
 import { Card } from "react-bootstrap";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { Link } from "react-router-dom";
 
 import { auth, db, storage } from "../../firebase";
 import { NeedToLogin } from "../login_reg/needtologin";
@@ -89,16 +90,10 @@ export const Create = () => {
               userId: user.uid,
             });
 
-            // if (publicAvail) {
-            //   await addDoc(collection(db, `posts/public/references`), {
-            //     reference: path,
-            //   });
-            // }
-
             setMsg("Success! Image Uploaded");
             setPreviewUrl(downloadURL);
           });
-        },
+        }
       );
     } catch (e) {
       console.error("Error adding document: ", e);
@@ -182,12 +177,20 @@ export const Create = () => {
                         <Loading />
                       </div>
                     )}
+                    <div className="create-btn-container">
                     <button
                       className="btn btn-dark choices"
                       onClick={clearData}
                     >
                       Add New
                     </button>
+                    <Link to={"/posts"}>
+                      <div className="btn btn-dark choices" id="posts">
+                        View Your Posts
+                      </div>
+                    </Link>
+                    </div>
+                    
                   </>
                 )}
               </Card>

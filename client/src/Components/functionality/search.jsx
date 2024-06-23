@@ -31,6 +31,7 @@ export const Search = () => {
         getInitialPosts("all");
       } else {
         setUser(null);
+        setPageLoading(false);
       }
       return () => unsubscribe();
     });
@@ -65,10 +66,8 @@ export const Search = () => {
     if (user) {
       let allPosts = {};
       getUsersPosts().then(async (data) => {
-        console.log(data);
         allPosts = { ...allPosts, ...data };
-        console.log("what")
-        console.log(scope)
+
         if (scope === "all") {
           
           const q = query(collection(db, "posts/public/references"));
@@ -84,10 +83,7 @@ export const Search = () => {
                 id: reference.id,
                 post: reference.data(),
               };
-              console.log("you here?");
-              console.log(data);
-              console.log(!Object.keys(allPosts).includes(data.id));
-              console.log(!user.uid === data.post.userId);
+
               if (!Object.keys(allPosts).includes(data.id)) {
                 allPosts[data.id] = data;
               }
@@ -179,7 +175,6 @@ export const Search = () => {
   };
 
   const changeScope = (value) => {
-    console.log(value);
     setScope(value);
     getInitialPosts(value);
   };

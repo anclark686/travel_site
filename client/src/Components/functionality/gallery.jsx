@@ -19,7 +19,7 @@ export const Gallery = () => {
         getPosts();
       } else {
         setUser(null);
-        getPosts();
+        setPageLoading(false);
       }
       return () => unsubscribe();
     });
