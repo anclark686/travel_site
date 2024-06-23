@@ -78,9 +78,6 @@ function MenuOffCanvas({ name, ...props }) {
                   Search
                 </div>
               </Link>
-              {/* <Link to={"/account"} onClick={toggleShow}>    
-                <div className="nav-menu" id="account">Account</div>
-            </Link>   */}
               <Link to={"/welcome"} onClick={toggleShow}>
                 <div className="nav-menu" id="welcome">
                   Home
